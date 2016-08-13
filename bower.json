@@ -1,0 +1,9 @@
+{
+  "name": "demo-voting-app",
+  "dependencies": {
+    "jquery": "^2.2.4",
+    "bootstrap": "^3.3.3",
+    "magnific-popup": "^1.1.0",
+    "toastr": "^2.1.1"
+  }
+}
