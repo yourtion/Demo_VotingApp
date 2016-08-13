@@ -39,4 +39,6 @@ jspm_packages
 
 # bower
 bower_components
+public/js/vendor.js
+public/js/vendor.bundle.js
 
