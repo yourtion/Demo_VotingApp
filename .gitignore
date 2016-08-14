@@ -39,6 +39,12 @@ jspm_packages
 
 # bower
 bower_components
-public/js/vendor.js
-public/js/vendor.bundle.js
 
+# Project
+.idea
+*.iml
+.DS_Store
+
+# Compiled files
+public/css/*
+public/js/*

@@ -1,23 +1,25 @@
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const gulpif = require('gulp-if');
-const streamify = require('gulp-streamify');
 const autoprefixer = require('gulp-autoprefixer');
 const cssmin = require('gulp-cssmin');
 const less = require('gulp-less');
 const concat = require('gulp-concat');
 const plumber = require('gulp-plumber');
+const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 const browserify = require('browserify');
 const watchify = require('watchify');
 const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
 
 const production = process.env.NODE_ENV === 'production';
 
 const dependencies = [
   'alt',
   'react',
+  'react-dom',
   'react-router',
   'underscore'
 ];
@@ -48,7 +50,8 @@ gulp.task('browserify-vendor', function() {
     .require(dependencies)
     .bundle()
     .pipe(source('vendor.bundle.js'))
-    .pipe(gulpif(production, streamify(uglify({ mangle: false }))))
+    .pipe(buffer())
+    .pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(gulp.dest('public/js'));
 });
 
@@ -58,12 +61,15 @@ gulp.task('browserify-vendor', function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify', ['browserify-vendor'], function() {
-  return browserify('app/main.js')
+  return browserify({ entries: 'app/main.js', debug: true })
     .external(dependencies)
-    .transform(babelify)
+    .transform(babelify, { presets: ['es2015', 'react'] })
     .bundle()
     .pipe(source('bundle.js'))
-    .pipe(gulpif(production, streamify(uglify({ mangle: false }))))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(gulpif(production, uglify({ mangle: false })))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('public/js'));
 });
 
@@ -73,14 +79,14 @@ gulp.task('browserify', ['browserify-vendor'], function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify-watch', ['browserify-vendor'], function() {
-  const bundler = watchify(browserify('app/main.js', watchify.args));
+  const bundler = watchify(browserify({ entries: 'app/main.js', debug: true }, watchify.args));
   bundler.external(dependencies);
-  bundler.transform(babelify);
+  bundler.transform(babelify, { presets: ['es2015', 'react'] });
   bundler.on('update', rebundle);
   return rebundle();
 
   function rebundle() {
-    var start = Date.now();
+    const start = Date.now();
     return bundler.bundle()
       .on('error', function(err) {
         gutil.log(gutil.colors.red(err.toString()));
@@ -89,6 +95,9 @@ gulp.task('browserify-watch', ['browserify-vendor'], function() {
         gutil.log(gutil.colors.green('Finished rebundling in', (Date.now() - start) + 'ms.'));
       })
       .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest('public/js/'));
   }
 });
