@@ -1,7 +1,7 @@
-import React from 'react';
-import Router from 'react-router';
-import routes from './routes';
+const Router = require('react-router');
+const routes = require('./routes');
+const render = require('react-dom');
+const React = require('react');
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
-  React.render(<Handler />, document.getElementById('app'));
-});
+React.render(<routes />, document.getElementById('app'))
+// render(routes, document.getElementById('app'));
