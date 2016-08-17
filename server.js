@@ -1,19 +1,19 @@
 'use strict';
 
+require('babel-register');
+
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-
-require('babel-register');
-
-var swig  = require('swig');
-var React = require('react');
-var ReactDOM = require('react-dom/server');
-var Router = require('react-router');
-var routes = require('./app/routes');
-
+const swig  = require('swig');
+const React = require('react');
+const ReactDOM = require('react-dom/server');
+const Router = require('react-router');
+const routes = require('./app/routes');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
@@ -28,8 +28,8 @@ app.use(function(req, res) {
     } else if (redirectLocation) {
       res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
-      var page = swig.renderFile('views/index.html', { html: html });
+      const html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
+      const page = swig.renderFile('views/index.html', { html: html });
       res.status(200).send(page);
     } else {
       res.status(404).send('Page Not Found')
@@ -37,6 +37,20 @@ app.use(function(req, res) {
   });
 });
 
-app.listen(app.get('port'), function() {
+var onlineUsers = 0;
+
+io.on('connection', function(socket) {
+  onlineUsers++;
+  console.log("111111---",onlineUsers);
+
+  socket.emit('onlineUsers', { onlineUsers: onlineUsers });
+
+  socket.on('disconnect', function() {
+    onlineUsers--;
+    socket.emit('onlineUsers', { onlineUsers: onlineUsers });
+  });
+});
+
+server.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
