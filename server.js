@@ -15,7 +15,6 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const mongoose = require('mongoose');
-const Character = require('./models/character');
 const config = require('./config');
 
 mongoose.connect(config.database);
@@ -23,13 +22,15 @@ mongoose.connection.on('error', function() {
   console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
 });
 
-import { RouterContext } from 'react-router'
+const RouterContext = require('react-router').RouterContext;
 
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+require('./api/characters')(app);
 
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
