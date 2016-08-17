@@ -1,22 +1,22 @@
-const gulp = require('gulp');
-const gutil = require('gulp-util');
-const gulpif = require('gulp-if');
-const autoprefixer = require('gulp-autoprefixer');
-const cssmin = require('gulp-cssmin');
-const less = require('gulp-less');
-const concat = require('gulp-concat');
-const plumber = require('gulp-plumber');
-const buffer = require('vinyl-buffer');
-const source = require('vinyl-source-stream');
-const babelify = require('babelify');
-const browserify = require('browserify');
-const watchify = require('watchify');
-const uglify = require('gulp-uglify');
-const sourcemaps = require('gulp-sourcemaps');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var gulpif = require('gulp-if');
+var autoprefixer = require('gulp-autoprefixer');
+var cssmin = require('gulp-cssmin');
+var less = require('gulp-less');
+var concat = require('gulp-concat');
+var plumber = require('gulp-plumber');
+var buffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+var babelify = require('babelify');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
 
-const production = process.env.NODE_ENV === 'production';
+var production = process.env.NODE_ENV === 'production';
 
-const dependencies = [
+var dependencies = [
   'alt',
   'react',
   'react-dom',
@@ -79,14 +79,14 @@ gulp.task('browserify', ['browserify-vendor'], function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify-watch', ['browserify-vendor'], function() {
-  const bundler = watchify(browserify({ entries: 'app/main.js', debug: true }, watchify.args));
+  var bundler = watchify(browserify({ entries: 'app/main.js', debug: true }, watchify.args));
   bundler.external(dependencies);
   bundler.transform(babelify, { presets: ['es2015', 'react'] });
   bundler.on('update', rebundle);
   return rebundle();
 
   function rebundle() {
-    const start = Date.now();
+    var start = Date.now();
     return bundler.bundle()
       .on('error', function(err) {
         gutil.log(gutil.colors.red(err.toString()));

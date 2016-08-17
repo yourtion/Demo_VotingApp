@@ -1,5 +1,4 @@
 'use strict';
-
 require('babel-register');
 
 const express = require('express');
@@ -39,7 +38,7 @@ app.use(function(req, res) {
     } else if (redirectLocation) {
       res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      const html = ReactDOM.renderToString(React.createElement(RouterContext, renderProps));
+      const html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
       const page = swig.renderFile('views/index.html', { html: html });
       res.status(200).send(page);
     } else {

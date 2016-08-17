@@ -24,8 +24,8 @@ class AddCharacter extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    var name = this.state.name.trim();
-    var gender = this.state.gender;
+    const name = this.state.name.trim();
+    const gender = this.state.gender;
 
     if (!name) {
       AddCharacterActions.invalidName();
