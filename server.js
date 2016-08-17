@@ -14,6 +14,14 @@ const routes = require('./app/routes');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const mongoose = require('mongoose');
+const Character = require('./models/character');
+const config = require('./config');
+
+mongoose.connect(config.database);
+mongoose.connection.on('error', function() {
+  console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
+});
 
 import { RouterContext } from 'react-router'
 
@@ -39,7 +47,7 @@ app.use(function(req, res) {
   });
 });
 
-var onlineUsers = 0;
+let onlineUsers = 0;
 
 io.on('connection', function(socket) {
   onlineUsers++;
