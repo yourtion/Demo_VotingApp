@@ -18,6 +18,89 @@ module.exports = function (app) {
   });
 
   /**
+   * GET /api/characters/top
+   * Return 100 highest ranked characters. Filter by gender, race and bloodline.
+   */
+  app.get('/api/characters/top', function(req, res, next) {
+    const params = req.query;
+    const conditions = {};
+
+    console.log('/api/characters/top');
+
+    _.each(params, function(value, key) {
+      conditions[key] = new RegExp('^' + value + '$', 'i');
+    });
+
+    Character
+      .find(conditions)
+      .sort('-wins') // Sort in descending order (highest wins on top)
+      .limit(100)
+      .exec(function(err, characters) {
+        if (err) return next(err);
+
+        // Sort by winning percentage
+        characters.sort(function(a, b) {
+          if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) { return 1; }
+          if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) { return -1; }
+          return 0;
+        });
+
+        res.send(characters);
+      });
+  });
+
+  /**
+   * GET /api/characters/search
+   * Looks up a character by name. (case-insensitive)
+   */
+  app.get('/api/characters/search', function(req, res, next) {
+    const characterName = new RegExp(req.query.name, 'i');
+
+    Character.findOne({ name: characterName }, function(err, character) {
+      if (err) return next(err);
+
+      if (!character) {
+        return res.status(404).send({ message: 'Character not found.' });
+      }
+
+      res.send(character);
+    });
+  });
+
+  /**
+   * GET /api/characters/:id
+   * Returns detailed character information.
+   */
+  app.get('/api/characters/:id', function(req, res, next) {
+    const id = req.params.id;
+
+    Character.findOne({ characterId: id }, function(err, character) {
+      if (err) return next(err);
+
+      if (!character) {
+        return res.status(404).send({ message: 'Character not found.' });
+      }
+
+      res.send(character);
+    });
+  });
+
+  /**
+   * GET /api/characters/shame
+   * Returns 100 lowest ranked characters.
+   */
+  app.get('/api/characters/shame', function(req, res, next) {
+    Character
+      .find()
+      .sort('-losses')
+      .limit(100)
+      .exec(function(err, characters) {
+        if (err) return next(err);
+        res.send(characters);
+      });
+  });
+
+  /**
    * POST /api/characters
    * Adds new character to the database.
    */
@@ -193,83 +276,4 @@ module.exports = function (app) {
       });
   });
 
-  /**
-   * GET /api/characters/search
-   * Looks up a character by name. (case-insensitive)
-   */
-  app.get('/api/characters/search', function(req, res, next) {
-    const characterName = new RegExp(req.query.name, 'i');
-
-    Character.findOne({ name: characterName }, function(err, character) {
-      if (err) return next(err);
-
-      if (!character) {
-        return res.status(404).send({ message: 'Character not found.' });
-      }
-
-      res.send(character);
-    });
-  });
-
-  /**
-   * GET /api/characters/:id
-   * Returns detailed character information.
-   */
-  app.get('/api/characters/:id', function(req, res, next) {
-    const id = req.params.id;
-
-    Character.findOne({ characterId: id }, function(err, character) {
-      if (err) return next(err);
-
-      if (!character) {
-        return res.status(404).send({ message: 'Character not found.' });
-      }
-
-      res.send(character);
-    });
-  });
-
-  /**
-   * GET /api/characters/top
-   * Return 100 highest ranked characters. Filter by gender, race and bloodline.
-   */
-  app.get('/api/characters/top', function(req, res, next) {
-    const params = req.query;
-    const conditions = {};
-
-    _.each(params, function(value, key) {
-      conditions[key] = new RegExp('^' + value + '$', 'i');
-    });
-
-    Character
-      .find(conditions)
-      .sort('-wins') // Sort in descending order (highest wins on top)
-      .limit(100)
-      .exec(function(err, characters) {
-        if (err) return next(err);
-
-        // Sort by winning percentage
-        characters.sort(function(a, b) {
-          if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) { return 1; }         if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) { return -1; }
-          return 0;
-        });
-
-        res.send(characters);
-      });
-  });
-
-  /**
-   * GET /api/characters/shame
-   * Returns 100 lowest ranked characters.
-   */
-  app.get('/api/characters/shame', function(req, res, next) {
-    Character
-      .find()
-      .sort('-losses')
-      .limit(100)
-      .exec(function(err, characters) {
-        if (err) return next(err);
-        res.send(characters);
-      });
-  });
 }
