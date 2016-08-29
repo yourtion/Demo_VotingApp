@@ -16,6 +16,7 @@ class FooterActions {
       .fail((jqXhr) => {
         this.getTopCharactersFail(jqXhr)
     });
+    return {};
   }
 }
 

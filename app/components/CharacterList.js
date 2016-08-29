@@ -38,7 +38,7 @@ class CharacterList extends React.Component {
             <span className='position pull-left'>{index + 1}</span>
             <div className='pull-left thumb-lg'>
               <Link to={'/characters/' + character.characterId}>
-                <img className='media-object' src={'http://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
+                <img className='media-object' src={'https://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
               </Link>
             </div>
             <div className='media-body'>

@@ -26,6 +26,7 @@ class NavbarActions {
       .fail(() => {
         this.findCharacterFail(payload);
       });
+      return {};
   }
 
   getCharacterCount() {
@@ -36,6 +37,7 @@ class NavbarActions {
       .fail((jqXhr) => {
         this.getCharacterCountFail(jqXhr)
       });
+      return {};
   }
 }
 
