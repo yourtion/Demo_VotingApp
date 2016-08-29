@@ -11,7 +11,10 @@
   "author": "Yourtion Guo <yourtion@gmail.com>",
   "license": "MIT",
   "babel": {
-    "presets": ["es2015", "react"]
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
   "dependencies": {
     "alt": "^0.18.5",
