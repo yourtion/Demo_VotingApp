@@ -19,7 +19,7 @@ class HomeActions {
       .fail(jqXhr => {
         this.getTwoCharactersFail(jqXhr.responseJSON.message);
       });
-      return {};
+    return {};
   }
 
   vote(winner, loser) {
@@ -34,6 +34,7 @@ class HomeActions {
       .fail((jqXhr) => {
         this.voteFail(jqXhr.responseJSON.message);
       });
+    return {};
   }
 }
 

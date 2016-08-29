@@ -16,6 +16,7 @@ class StatsActions {
       .fail((jqXhr) => {
         this.getStatsFail(jqXhr);
       });
+    return {};
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import StatsStore from '../stores/StatsStore'
+import StatsStore from '../stores/StatsStore';
 import StatsActions from '../actions/StatsActions';
 
 class Stats extends React.Component {

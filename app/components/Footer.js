@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import FooterStore from '../stores/FooterStore'
+import FooterStore from '../stores/FooterStore';
 import FooterActions from '../actions/FooterActions';
 
 class Footer extends React.Component {
@@ -31,7 +31,7 @@ class Footer extends React.Component {
             <img className='thumb-md' src={'https://image.eveonline.com/Character/' + character.characterId + '_128.jpg'} />
           </Link>
         </li>
-      )
+      );
     });
 
     return (
@@ -53,7 +53,7 @@ class Footer extends React.Component {
           </div>
         </div>
       </footer>
-    )
+    );
   }
 }
 

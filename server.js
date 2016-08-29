@@ -17,9 +17,6 @@ const mongoose = require('mongoose');
 const config = require('./config');
 
 mongoose.connect(config.database);
-mongoose.connection.on('error', function() {
-  console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
-});
 mongoose.Promise = global.Promise;
 
 const RouterContext = require('react-router').RouterContext;
@@ -37,15 +34,15 @@ require('./api/stats')(app);
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
     if (err) {
-      res.status(500).send(err.message)
+      res.status(500).send(err.message);
     } else if (redirectLocation) {
-      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
+      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
       const html = ReactDOM.renderToString(React.createElement(RouterContext, renderProps));
       const page = swig.renderFile('views/index.html', { html: html });
       res.status(200).send(page);
     } else {
-      res.status(404).send('Page Not Found')
+      res.status(404).send('Page Not Found');
     }
   });
 });
@@ -65,5 +62,6 @@ io.on('connection', function(socket) {
 });
 
 server.listen(app.get('port'), function() {
+  // eslint-disable-next-line
   console.log('Express server listening on port ' + app.get('port'));
 });

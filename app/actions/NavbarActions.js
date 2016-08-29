@@ -26,18 +26,18 @@ class NavbarActions {
       .fail(() => {
         this.findCharacterFail(payload);
       });
-      return {};
+    return {};
   }
 
   getCharacterCount() {
     $.ajax({ url: '/api/characters/count' })
       .done((data) => {
-        this.getCharacterCountSuccess(data)
+        this.getCharacterCountSuccess(data);
       })
       .fail((jqXhr) => {
-        this.getCharacterCountFail(jqXhr)
+        this.getCharacterCountFail(jqXhr);
       });
-      return {};
+    return {};
   }
 }
 

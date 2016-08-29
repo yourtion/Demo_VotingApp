@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('async');
 const request = require('request');
 const xml2js = require('xml2js');
@@ -24,8 +26,6 @@ module.exports = function (app) {
   app.get('/api/characters/top', function(req, res, next) {
     const params = req.query;
     const conditions = {};
-
-    console.log('/api/characters/top');
 
     _.each(params, function(value, key) {
       conditions[key] = new RegExp('^' + value + '$', 'i');
@@ -227,17 +227,17 @@ module.exports = function (app) {
     }
 
     async.parallel([
-        function(callback) {
-          Character.findOne({ characterId: winner }, function(err, winner) {
-            callback(err, winner);
-          });
-        },
-        function(callback) {
-          Character.findOne({ characterId: loser }, function(err, loser) {
-            callback(err, loser);
-          });
-        }
-      ],
+      function(callback) {
+        Character.findOne({ characterId: winner }, function(err, winner) {
+          callback(err, winner);
+        });
+      },
+      function(callback) {
+        Character.findOne({ characterId: loser }, function(err, loser) {
+          callback(err, loser);
+        });
+      }
+    ],
       function(err, results) {
         if (err) return next(err);
 
@@ -276,4 +276,4 @@ module.exports = function (app) {
       });
   });
 
-}
+};

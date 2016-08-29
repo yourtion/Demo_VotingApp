@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "watch": "nodemon server.js",
+    "lint": "eslint . --fix",
     "postinstall": "bower install && gulp build"
   },
   "author": "Yourtion Guo <yourtion@gmail.com>",
@@ -45,6 +46,7 @@
     "babelify": "^7.3.0",
     "bower": "^1.7.9",
     "browserify": "^13.1.0",
+    "eslint-plugin-react": "^6.2.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-concat": "^2.6.0",

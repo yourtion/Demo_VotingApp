@@ -18,6 +18,7 @@ class CharacterActions {
       .fail((jqXhr) => {
         this.getCharacterFail(jqXhr);
       });
+    return {};
   }
 
   report(characterId) {
@@ -32,6 +33,7 @@ class CharacterActions {
       .fail((jqXhr) => {
         this.reportFail(jqXhr);
       });
+    return {};
   }
 }
 

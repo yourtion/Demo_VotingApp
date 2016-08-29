@@ -1,0 +1,9 @@
+node_modules
+public
+view
+.git
+.c9
+data_sample
+bower_components
+
+!.eslintrc.js

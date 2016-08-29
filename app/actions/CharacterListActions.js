@@ -32,6 +32,7 @@ class CharacterListActions {
       .fail((jqXhr) => {
         this.getCharactersFail(jqXhr);
       });
+    return {};
   }
 }
 

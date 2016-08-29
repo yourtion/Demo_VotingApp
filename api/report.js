@@ -1,4 +1,5 @@
-const async = require('async');
+'use strict';
+
 const Character = require('../models/character');
 
 module.exports = function (app) {
@@ -29,4 +30,4 @@ module.exports = function (app) {
       });
     });
   });
-}
+};

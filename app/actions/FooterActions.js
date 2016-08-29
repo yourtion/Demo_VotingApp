@@ -11,11 +11,11 @@ class FooterActions {
   getTopCharacters() {
     $.ajax({ url: '/api/characters/top' })
       .done((data) => {
-        this.getTopCharactersSuccess(data)
+        this.getTopCharactersSuccess(data);
       })
       .fail((jqXhr) => {
-        this.getTopCharactersFail(jqXhr)
-    });
+        this.getTopCharactersFail(jqXhr);
+      });
     return {};
   }
 }

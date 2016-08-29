@@ -14,6 +14,7 @@ class Navbar extends React.Component {
     NavbarStore.listen(this.onChange);
     NavbarActions.getCharacterCount();
 
+    // eslint-disable-next-line
     let socket = io.connect();
 
     socket.on('onlineUsers', (data) => {

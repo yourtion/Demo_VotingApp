@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Link} from 'react-router';
-import HomeStore from '../stores/HomeStore'
+import HomeStore from '../stores/HomeStore';
 import HomeActions from '../actions/HomeActions';
 import {first, without, findWhere} from 'underscore';
 
