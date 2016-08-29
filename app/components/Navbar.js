@@ -9,17 +9,17 @@ class Navbar extends React.Component {
     this.state = NavbarStore.getState();
     this.onChange = this.onChange.bind(this);
   }
-  
+
   componentDidMount() {
     NavbarStore.listen(this.onChange);
     NavbarActions.getCharacterCount();
-    
+
     let socket = io.connect();
-    
+
     socket.on('onlineUsers', (data) => {
       NavbarActions.updateOnlineUsers(data);
     });
-    
+
     $(document).ajaxStart(() => {
       NavbarActions.updateAjaxAnimation('fadeIn');
     });
@@ -30,7 +30,7 @@ class Navbar extends React.Component {
       }, 750);
     });
   }
-  
+
   componentWillUnmount() {
     NavbarStore.unlisten(this.onChange);
   }
@@ -38,7 +38,7 @@ class Navbar extends React.Component {
   onChange(state) {
     this.setState(state);
   }
-  
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -52,7 +52,7 @@ class Navbar extends React.Component {
       });
     }
   }
-  
+
   render() {
     return (
       <nav className='navbar navbar-default navbar-static-top'>

@@ -21,20 +21,20 @@ class NavbarActions {
     })
       .done((data) => {
         assign(payload, data);
-        this.actions.findCharacterSuccess(payload);
+        this.findCharacterSuccess(payload);
       })
       .fail(() => {
-        this.actions.findCharacterFail(payload);
+        this.findCharacterFail(payload);
       });
   }
 
   getCharacterCount() {
     $.ajax({ url: '/api/characters/count' })
       .done((data) => {
-        this.actions.getCharacterCountSuccess(data)
+        this.getCharacterCountSuccess(data)
       })
       .fail((jqXhr) => {
-        this.actions.getCharacterCountFail(jqXhr)
+        this.getCharacterCountFail(jqXhr)
       });
   }
 }

@@ -20,11 +20,11 @@ class AddCharacterActions {
     })
       .done((data) => {
         console.log(data);
-        this.actions.addCharacterSuccess(data.message);
+        this.addCharacterSuccess(data.message);
       })
       .fail((jqXhr) => {
         console.log(jqXhr);
-        this.actions.addCharacterFail(jqXhr.responseJSON.message);
+        this.addCharacterFail(jqXhr.responseJSON.message);
       });
   }
 }
