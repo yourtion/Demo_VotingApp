@@ -10,11 +10,11 @@ module.exports = function (app) {
    * Adds new character to the database.
    */
   app.post('/api/characters', function(req, res, next) {
-    var gender = req.body.gender;
-    var characterName = req.body.name;
-    var characterIdLookupUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
+    const gender = req.body.gender;
+    const characterName = req.body.name;
+    const characterIdLookupUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
 
-    var parser = new xml2js.Parser();
+    const parser = new xml2js.Parser();
 
     async.waterfall([
       function(callback) {
@@ -23,7 +23,7 @@ module.exports = function (app) {
           parser.parseString(xml, function(err, parsedXml) {
             if (err) return next(err);
             try {
-              var characterId = parsedXml.eveapi.result[0].rowset[0].row[0].$.characterID;
+              const characterId = parsedXml.eveapi.result[0].rowset[0].row[0].$.characterID;
 
               Character.findOne({ characterId: characterId }, function(err, character) {
                 if (err) return next(err);
@@ -41,18 +41,18 @@ module.exports = function (app) {
         });
       },
       function(characterId) {
-        var characterInfoUrl = 'https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID=' + characterId;
+        const characterInfoUrl = 'https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID=' + characterId;
 
         request.get({ url: characterInfoUrl }, function(err, request, xml) {
           if (err) return next(err);
           parser.parseString(xml, function(err, parsedXml) {
             if (err) return res.send(err);
             try {
-              var name = parsedXml.eveapi.result[0].characterName[0];
-              var race = parsedXml.eveapi.result[0].race[0];
-              var bloodline = parsedXml.eveapi.result[0].bloodline[0];
+              const name = parsedXml.eveapi.result[0].characterName[0];
+              const race = parsedXml.eveapi.result[0].race[0];
+              const bloodline = parsedXml.eveapi.result[0].bloodline[0];
 
-              var character = new Character({
+              const character = new Character({
                 characterId: characterId,
                 name: name,
                 race: race,
