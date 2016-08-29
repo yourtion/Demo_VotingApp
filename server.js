@@ -56,10 +56,11 @@ io.on('connection', function(socket) {
   onlineUsers++;
 
   socket.emit('onlineUsers', { onlineUsers: onlineUsers });
+  socket.broadcast.emit('onlineUsers', { onlineUsers: onlineUsers });
 
   socket.on('disconnect', function() {
     onlineUsers--;
-    socket.emit('onlineUsers', { onlineUsers: onlineUsers });
+    socket.broadcast.emit('onlineUsers', { onlineUsers: onlineUsers });
   });
 });
 

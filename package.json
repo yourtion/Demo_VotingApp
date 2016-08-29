@@ -6,7 +6,7 @@
   "scripts": {
     "install": "bower install",
     "start": "node server.js",
-    "watch": "nodemon --exec node -- server.js",
+    "watch": "nodemon server.js",
     "postinstall": "bower install && gulp build"
   },
   "author": "Yourtion Guo <yourtion@gmail.com>",
