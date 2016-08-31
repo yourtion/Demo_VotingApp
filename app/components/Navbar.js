@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import NavbarStore from '../stores/NavbarStore';
 import NavbarActions from '../actions/NavbarActions';
 
@@ -43,13 +43,13 @@ class Navbar extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let searchQuery = this.state.searchQuery.trim();
+    const searchQuery = this.state.searchQuery.trim();
 
     if (searchQuery) {
       NavbarActions.findCharacter({
-        searchQuery: searchQuery,
+        searchQuery,
         searchForm: this.refs.searchForm,
-        history: this.props.history
+        history: this.props.history,
       });
     }
   }

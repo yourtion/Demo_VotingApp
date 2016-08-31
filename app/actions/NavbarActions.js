@@ -1,5 +1,5 @@
 import alt from '../alt';
-import {assign} from 'underscore';
+import { assign } from 'underscore';
 
 class NavbarActions {
   constructor() {
@@ -17,7 +17,7 @@ class NavbarActions {
   findCharacter(payload) {
     $.ajax({
       url: '/api/characters/search',
-      data: { name: payload.searchQuery }
+      data: { name: payload.searchQuery },
     })
       .done((data) => {
         assign(payload, data);

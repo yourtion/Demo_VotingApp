@@ -12,10 +12,10 @@ module.exports = function (app) {
    * GET /api/characters/count
    * Returns the total number of characters.
    */
-  app.get('/api/characters/count', function(req, res, next) {
-    Character.count({}, function(err, count) {
+  app.get('/api/characters/count', function (req, res, next) {
+    Character.count({}, function (err, count) {
       if (err) return next(err);
-      res.send({ count: count });
+      res.send({ count });
     });
   });
 
@@ -23,23 +23,24 @@ module.exports = function (app) {
    * GET /api/characters/top
    * Return 100 highest ranked characters. Filter by gender, race and bloodline.
    */
-  app.get('/api/characters/top', function(req, res, next) {
+  app.get('/api/characters/top', function (req, res, next) {
     const params = req.query;
     const conditions = {};
 
-    _.each(params, function(value, key) {
+    _.each(params, function (value, key) {
       conditions[key] = new RegExp('^' + value + '$', 'i');
     });
 
     Character
       .find(conditions)
-      .sort('-wins') // Sort in descending order (highest wins on top)
+      // Sort in descending order (highest wins on top)
+      .sort('-wins')
       .limit(100)
-      .exec(function(err, characters) {
+      .exec(function (err, characters) {
         if (err) return next(err);
 
         // Sort by winning percentage
-        characters.sort(function(a, b) {
+        characters.sort(function (a, b) {
           if (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) { return 1; }
           if (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) { return -1; }
           return 0;
@@ -53,10 +54,10 @@ module.exports = function (app) {
    * GET /api/characters/search
    * Looks up a character by name. (case-insensitive)
    */
-  app.get('/api/characters/search', function(req, res, next) {
+  app.get('/api/characters/search', function (req, res, next) {
     const characterName = new RegExp(req.query.name, 'i');
 
-    Character.findOne({ name: characterName }, function(err, character) {
+    Character.findOne({ name: characterName }, function (err, character) {
       if (err) return next(err);
 
       if (!character) {
@@ -71,10 +72,10 @@ module.exports = function (app) {
    * GET /api/characters/:id
    * Returns detailed character information.
    */
-  app.get('/api/characters/:id', function(req, res, next) {
+  app.get('/api/characters/:id', function (req, res, next) {
     const id = req.params.id;
 
-    Character.findOne({ characterId: id }, function(err, character) {
+    Character.findOne({ characterId: id }, function (err, character) {
       if (err) return next(err);
 
       if (!character) {
@@ -89,12 +90,12 @@ module.exports = function (app) {
    * GET /api/characters/shame
    * Returns 100 lowest ranked characters.
    */
-  app.get('/api/characters/shame', function(req, res, next) {
+  app.get('/api/characters/shame', function (req, res, next) {
     Character
       .find()
       .sort('-losses')
       .limit(100)
-      .exec(function(err, characters) {
+      .exec(function (err, characters) {
         if (err) return next(err);
         res.send(characters);
       });
@@ -104,7 +105,7 @@ module.exports = function (app) {
    * POST /api/characters
    * Adds new character to the database.
    */
-  app.post('/api/characters', function(req, res, next) {
+  app.post('/api/characters', function (req, res, next) {
     const gender = req.body.gender;
     const characterName = req.body.name;
     const characterIdLookupUrl = 'https://api.eveonline.com/eve/CharacterID.xml.aspx?names=' + characterName;
@@ -112,15 +113,15 @@ module.exports = function (app) {
     const parser = new xml2js.Parser();
 
     async.waterfall([
-      function(callback) {
-        request.get(characterIdLookupUrl, function(err, request, xml) {
+      function (callback) {
+        request.get(characterIdLookupUrl, function (err, request, xml) {
           if (err) return next(err);
-          parser.parseString(xml, function(err, parsedXml) {
+          parser.parseString(xml, function (err, parsedXml) {
             if (err) return next(err);
             try {
               const characterId = parsedXml.eveapi.result[0].rowset[0].row[0].$.characterID;
 
-              Character.findOne({ characterId: characterId }, function(err, character) {
+              Character.findOne({ characterId }, function (err, character) {
                 if (err) return next(err);
 
                 if (character) {
@@ -135,12 +136,12 @@ module.exports = function (app) {
           });
         });
       },
-      function(characterId) {
+      function (characterId) {
         const characterInfoUrl = 'https://api.eveonline.com/eve/CharacterInfo.xml.aspx?characterID=' + characterId;
 
-        request.get({ url: characterInfoUrl }, function(err, request, xml) {
+        request.get({ url: characterInfoUrl }, function (err, request, xml) {
           if (err) return next(err);
-          parser.parseString(xml, function(err, parsedXml) {
+          parser.parseString(xml, function (err, parsedXml) {
             if (err) return res.send(err);
             try {
               const name = parsedXml.eveapi.result[0].characterName[0];
@@ -148,15 +149,15 @@ module.exports = function (app) {
               const bloodline = parsedXml.eveapi.result[0].bloodline[0];
 
               const character = new Character({
-                characterId: characterId,
-                name: name,
-                race: race,
-                bloodline: bloodline,
-                gender: gender,
-                random: [Math.random(), 0]
+                characterId,
+                name,
+                race,
+                bloodline,
+                gender,
+                random: [ Math.random(), 0 ],
               });
 
-              character.save(function(err) {
+              character.save(function (err) {
                 if (err) return next(err);
                 res.send({ message: characterName + ' has been added successfully!' });
               });
@@ -165,7 +166,7 @@ module.exports = function (app) {
             }
           });
         });
-      }
+      },
     ]);
   });
 
@@ -173,15 +174,15 @@ module.exports = function (app) {
    * GET /api/characters
    * Returns 2 random characters of the same gender that have not been voted yet.
    */
-  app.get('/api/characters', function(req, res, next) {
-    const choices = ['Female', 'Male'];
+  app.get('/api/characters', function (req, res, next) {
+    const choices = [ 'Female', 'Male' ];
     const randomGender = _.sample(choices);
 
-    Character.find({ random: { $near: [Math.random(), 0] } })
+    Character.find({ random: { $near: [ Math.random(), 0 ]}})
       .where('voted', false)
       .where('gender', randomGender)
       .limit(2)
-      .exec(function(err, characters) {
+      .exec(function (err, characters) {
         if (err) return next(err);
 
         if (characters.length === 2) {
@@ -191,18 +192,18 @@ module.exports = function (app) {
         const oppositeGender = _.first(_.without(choices, randomGender));
 
         Character
-          .find({ random: { $near: [Math.random(), 0] } })
+          .find({ random: { $near: [ Math.random(), 0 ]}})
           .where('voted', false)
           .where('gender', oppositeGender)
           .limit(2)
-          .exec(function(err, characters) {
+          .exec(function (err, characters) {
             if (err) return next(err);
 
             if (characters.length === 2) {
               return res.send(characters);
             }
 
-            Character.update({}, { $set: { voted: false } }, { multi: true }, function(err) {
+            Character.update({}, { $set: { voted: false }}, { multi: true }, function (err) {
               if (err) return next(err);
               res.send([]);
             });
@@ -214,7 +215,7 @@ module.exports = function (app) {
    * PUT /api/characters
    * Update winning and losing count for both characters.
    */
-  app.put('/api/characters', function(req, res, next) {
+  app.put('/api/characters', function (req, res, next) {
     const winner = req.body.winner;
     const loser = req.body.loser;
 
@@ -227,18 +228,18 @@ module.exports = function (app) {
     }
 
     async.parallel([
-      function(callback) {
-        Character.findOne({ characterId: winner }, function(err, winner) {
+      function (callback) {
+        Character.findOne({ characterId: winner }, function (err, winner) {
           callback(err, winner);
         });
       },
-      function(callback) {
-        Character.findOne({ characterId: loser }, function(err, loser) {
+      function (callback) {
+        Character.findOne({ characterId: loser }, function (err, loser) {
           callback(err, loser);
         });
-      }
+      },
     ],
-      function(err, results) {
+      function (err, results) {
         if (err) return next(err);
 
         const winner = results[0];
@@ -253,23 +254,23 @@ module.exports = function (app) {
         }
 
         async.parallel([
-          function(callback) {
-            winner.wins++;
+          function (callback) {
+            winner.wins += 1;
             winner.voted = true;
-            winner.random = [Math.random(), 0];
-            winner.save(function(err) {
+            winner.random = [ Math.random(), 0 ];
+            winner.save(function (err) {
               callback(err);
             });
           },
-          function(callback) {
-            loser.losses++;
+          function (callback) {
+            loser.losses += 1;
             loser.voted = true;
-            loser.random = [Math.random(), 0];
-            loser.save(function(err) {
+            loser.random = [ Math.random(), 0 ];
+            loser.save(function (err) {
               callback(err);
             });
-          }
-        ], function(err) {
+          },
+        ], function (err) {
           if (err) return next(err);
           res.status(200).end();
         });

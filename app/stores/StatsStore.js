@@ -1,4 +1,4 @@
-import {assign} from 'underscore';
+import { assign } from 'underscore';
 import alt from '../alt';
 import StatsActions from '../actions/StatsActions';
 

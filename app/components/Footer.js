@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import FooterStore from '../stores/FooterStore';
 import FooterActions from '../actions/FooterActions';
 
@@ -24,7 +24,7 @@ class Footer extends React.Component {
   }
 
   render() {
-    let leaderboardCharacters = this.state.characters.map((character) => {
+    const leaderboardCharacters = this.state.characters.map((character) => {
       return (
         <li key={character.characterId}>
           <Link to={'/characters/' + character.characterId}>

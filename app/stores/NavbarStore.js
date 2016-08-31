@@ -26,7 +26,8 @@ class NavbarStore {
   }
 
   onUpdateAjaxAnimation(className) {
-    this.ajaxAnimationClass = className; //fadein or fadeout
+    // fadein or fadeout
+    this.ajaxAnimationClass = className;
   }
 
   onUpdateSearchQuery(event) {

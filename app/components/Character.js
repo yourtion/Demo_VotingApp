@@ -20,8 +20,8 @@ class Character extends React.Component {
       midClick: true,
       zoom: {
         enabled: true,
-        duration: 300
-      }
+        duration: 300,
+      },
     });
   }
 

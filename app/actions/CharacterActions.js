@@ -25,7 +25,7 @@ class CharacterActions {
     $.ajax({
       type: 'POST',
       url: '/api/report',
-      data: { characterId: characterId }
+      data: { characterId },
     })
       .done(() => {
         this.reportSuccess();

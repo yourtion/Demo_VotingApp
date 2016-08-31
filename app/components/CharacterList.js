@@ -1,6 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router';
-import {isEqual} from 'underscore';
+import { Link } from 'react-router';
+import { isEqual } from 'underscore';
 import CharacterListStore from '../stores/CharacterListStore';
 import CharacterListActions from '../actions/CharacterListActions';
 
@@ -31,7 +31,7 @@ class CharacterList extends React.Component {
   }
 
   render() {
-    let charactersList = this.state.characters.map((character, index) => {
+    const charactersList = this.state.characters.map((character, index) => {
       return (
         <div key={character.characterId} className='list-group-item animated fadeIn'>
           <div className='media'>

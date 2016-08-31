@@ -9,8 +9,8 @@ const characterSchema = new mongoose.Schema({
   wins: { type: Number, default: 0 },
   losses: { type: Number, default: 0 },
   reports: { type: Number, default: 0 },
-  random: { type: [Number], index: '2d' },
-  voted: { type: Boolean, default: false }
+  random: { type: [ Number ], index: '2d' },
+  voted: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Character', characterSchema);

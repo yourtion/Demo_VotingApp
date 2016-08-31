@@ -1,10 +1,10 @@
 'use strict';
 
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import HomeStore from '../stores/HomeStore';
 import HomeActions from '../actions/HomeActions';
-import {first, without, findWhere} from 'underscore';
+import { first, without, findWhere } from 'underscore';
 
 class Home extends React.Component {
 
@@ -28,13 +28,13 @@ class Home extends React.Component {
   }
 
   handleClick(character) {
-    var winner = character.characterId;
-    var loser = first(without(this.state.characters, findWhere(this.state.characters, { characterId: winner }))).characterId;
+    const winner = character.characterId;
+    const loser = first(without(this.state.characters, findWhere(this.state.characters, { characterId: winner }))).characterId;
     HomeActions.vote(winner, loser);
   }
 
   render() {
-    var characterNodes = this.state.characters.map((character, index) => {
+    const characterNodes = this.state.characters.map((character, index) => {
       return (
         <div key={character.characterId} className={index === 0 ? 'col-xs-6 col-sm-6 col-md-5 col-md-offset-1' : 'col-xs-6 col-sm-6 col-md-5'}>
           <div className='thumbnail fadeInUp animated'>

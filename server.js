@@ -5,7 +5,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const swig  = require('swig');
+const swig = require('swig');
 const React = require('react');
 const ReactDOM = require('react-dom/server');
 const Router = require('react-router');
@@ -31,15 +31,15 @@ require('./api/characters')(app);
 require('./api/report')(app);
 require('./api/stats')(app);
 
-app.use(function(req, res) {
-  Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
+app.use(function (req, res) {
+  Router.match({ routes: routes.default, location: req.url }, function (err, redirectLocation, renderProps) {
     if (err) {
       res.status(500).send(err.message);
     } else if (redirectLocation) {
       res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
       const html = ReactDOM.renderToString(React.createElement(RouterContext, renderProps));
-      const page = swig.renderFile('views/index.html', { html: html });
+      const page = swig.renderFile('views/index.html', { html });
       res.status(200).send(page);
     } else {
       res.status(404).send('Page Not Found');
@@ -49,19 +49,19 @@ app.use(function(req, res) {
 
 let onlineUsers = 0;
 
-io.on('connection', function(socket) {
-  onlineUsers++;
+io.on('connection', function (socket) {
+  onlineUsers += 1;
 
-  socket.emit('onlineUsers', { onlineUsers: onlineUsers });
-  socket.broadcast.emit('onlineUsers', { onlineUsers: onlineUsers });
+  socket.emit('onlineUsers', { onlineUsers });
+  socket.broadcast.emit('onlineUsers', { onlineUsers });
 
-  socket.on('disconnect', function() {
-    onlineUsers--;
-    socket.broadcast.emit('onlineUsers', { onlineUsers: onlineUsers });
+  socket.on('disconnect', function () {
+    onlineUsers -= 1;
+    socket.broadcast.emit('onlineUsers', { onlineUsers });
   });
 });
 
-server.listen(app.get('port'), function() {
+server.listen(app.get('port'), function () {
   // eslint-disable-next-line
   console.log('Express server listening on port ' + app.get('port'));
 });

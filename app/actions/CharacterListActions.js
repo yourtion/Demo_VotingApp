@@ -10,9 +10,9 @@ class CharacterListActions {
 
   getCharacters(payload) {
     let url = '/api/characters/top';
-    let params = {
+    const params = {
       race: payload.race,
-      bloodline: payload.bloodline
+      bloodline: payload.bloodline,
     };
 
     if (payload.category === 'female') {
@@ -25,7 +25,7 @@ class CharacterListActions {
       url = '/api/characters/shame';
     }
 
-    $.ajax({ url: url, data: params })
+    $.ajax({ url, data: params })
       .done((data) => {
         this.getCharactersSuccess(data);
       })
