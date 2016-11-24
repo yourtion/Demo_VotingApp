@@ -12,4 +12,4 @@
 最新库列表：[package.json](package.json)
 
 
-[ScreenShot](ScreenShot.jpg)
+![ScreenShot](ScreenShot.jpg)
