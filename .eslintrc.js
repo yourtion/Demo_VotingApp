@@ -3,6 +3,6 @@ module.exports = {
   globals: {
     '$': false,
     'localStorage': false,
-    'toastr': false
+    'toastr': false,
   },
 };
