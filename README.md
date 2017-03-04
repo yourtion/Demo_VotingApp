@@ -1,5 +1,7 @@
 # Demo-VotingApp
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/yourtion/Demo_VotingApp.svg)](https://greenkeeper.io/)
+
 使用React、Node.js、MongoDB、Socket.IO开发一个角色投票应用。
 
 参考文章：
