@@ -5,6 +5,7 @@ const Character = require('../models/character');
 const _ = require('underscore');
 
 function importData() {
+  // eslint-disable-next-line
   console.log('Import Data');
   const readline = require('readline');
   const fs = require('fs');
@@ -19,6 +20,7 @@ function importData() {
     delete l.__v;
     const c = new Character(l);
     c.save(function (err) {
+      // eslint-disable-next-line
       if(err) console.log(err);
     });
   });

@@ -11,18 +11,20 @@ const ReactDOM = require('react-dom/server');
 const Router = require('react-router');
 const routes = require('./app/routes');
 const app = express();
+// eslint-disable-next-line
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const mongoose = require('mongoose');
 const config = require('./config');
 
-mongoose.connect(config.database);
 mongoose.Promise = global.Promise;
 
 const RouterContext = require('react-router').RouterContext;
 
 app.set('port', process.env.PORT || 3000);
-app.use(logger('dev'));
+if (process.env.NODE_ENV !== 'production') {
+  app.use(logger('dev'));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -61,7 +63,12 @@ io.on('connection', function (socket) {
   });
 });
 
-server.listen(app.get('port'), function () {
+mongoose.connect(config.database, function (err) {
+  if(err) return process.exit(-1);
   // eslint-disable-next-line
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log(`Connected: ${config.database}`)
+  server.listen(app.get('port'), function () {
+    // eslint-disable-next-line
+    console.log('Express server listening on port ' + app.get('port'));
+  });
 });
