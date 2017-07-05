@@ -69,6 +69,7 @@ mongoose.connect(config.database, function (err) {
     console.log(`Connecte error: ${config.database}`);
     // eslint-disable-next-line
     console.error(err);
+    process.exit(-1);
   }
   // eslint-disable-next-line
   console.log(`Connected: ${config.database}`);
