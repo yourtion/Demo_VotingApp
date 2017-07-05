@@ -4,6 +4,26 @@ const async = require('async');
 const Character = require('../models/character');
 const _ = require('underscore');
 
+function importData() {
+  console.log("Import Data")
+  const readline = require('readline');
+  const fs = require('fs');
+  const path = require('path');
+  const rl = readline.createInterface({
+    input: fs.createReadStream(path.join(__dirname ,'../data_sample/characters.json'))
+  });
+
+  rl.on('line', (line) => {
+    const l = JSON.parse(line);
+    l._id = l._id.$oid;
+    delete l.__v
+    const c = new Character(l);
+    c.save(function (err) {
+      if(err) console.log(err);
+    });
+  });
+}
+
 module.exports = function (app) {
 
   /**
@@ -14,6 +34,9 @@ module.exports = function (app) {
     async.parallel([
       function (callback) {
         Character.count({}, function (err, count) {
+          if(count<1) {
+            importData()
+          }
           callback(err, count);
         });
       },
