@@ -64,9 +64,14 @@ io.on('connection', function (socket) {
 });
 
 mongoose.connect(config.database, function (err) {
-  if(err) return process.exit(-1);
+  if(err) {
+    // eslint-disable-next-line
+    console.log(`Connecte error: ${config.database}`);
+    // eslint-disable-next-line
+    console.error(err);
+  }
   // eslint-disable-next-line
-  console.log(`Connected: ${config.database}`)
+  console.log(`Connected: ${config.database}`);
   server.listen(app.get('port'), function () {
     // eslint-disable-next-line
     console.log('Express server listening on port ' + app.get('port'));
