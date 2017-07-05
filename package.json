@@ -8,6 +8,7 @@
     "watch": "nodemon server.js",
     "lint": "eslint . --fix",
     "daocloud_init": "bower install --allow-root && gulp build",
+    "heroku-postbuild": "bower install && gulp build",
     "init_gulp": "bower install && gulp build"
   },
   "repository": {
