@@ -7,7 +7,7 @@
     "start": "node server.js",
     "watch": "nodemon server.js",
     "lint": "eslint . --fix",
-    "postinstall": "bower install && gulp build"
+    "init_gulp": "bower install && gulp build"
   },
   "repository": {
     "type": "git",
