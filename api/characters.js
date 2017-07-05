@@ -239,42 +239,42 @@ module.exports = function (app) {
         });
       },
     ],
-      function (err, results) {
+    function (err, results) {
+      if (err) return next(err);
+
+      const winner = results[0];
+      const loser = results[1];
+
+      if (!winner || !loser) {
+        return res.status(404).send({ message: 'One of the characters no longer exists.' });
+      }
+
+      if (winner.voted || loser.voted) {
+        return res.status(200).end();
+      }
+
+      async.parallel([
+        function (callback) {
+          winner.wins += 1;
+          winner.voted = true;
+          winner.random = [ Math.random(), 0 ];
+          winner.save(function (err) {
+            callback(err);
+          });
+        },
+        function (callback) {
+          loser.losses += 1;
+          loser.voted = true;
+          loser.random = [ Math.random(), 0 ];
+          loser.save(function (err) {
+            callback(err);
+          });
+        },
+      ], function (err) {
         if (err) return next(err);
-
-        const winner = results[0];
-        const loser = results[1];
-
-        if (!winner || !loser) {
-          return res.status(404).send({ message: 'One of the characters no longer exists.' });
-        }
-
-        if (winner.voted || loser.voted) {
-          return res.status(200).end();
-        }
-
-        async.parallel([
-          function (callback) {
-            winner.wins += 1;
-            winner.voted = true;
-            winner.random = [ Math.random(), 0 ];
-            winner.save(function (err) {
-              callback(err);
-            });
-          },
-          function (callback) {
-            loser.losses += 1;
-            loser.voted = true;
-            loser.random = [ Math.random(), 0 ];
-            loser.save(function (err) {
-              callback(err);
-            });
-          },
-        ], function (err) {
-          if (err) return next(err);
-          res.status(200).end();
-        });
+        res.status(200).end();
       });
+    });
   });
 
 };

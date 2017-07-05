@@ -5,18 +5,18 @@ const Character = require('../models/character');
 const _ = require('underscore');
 
 function importData() {
-  console.log("Import Data")
+  console.log('Import Data');
   const readline = require('readline');
   const fs = require('fs');
   const path = require('path');
   const rl = readline.createInterface({
-    input: fs.createReadStream(path.join(__dirname ,'../data_sample/characters.json'))
+    input: fs.createReadStream(path.join(__dirname, '../data_sample/characters.json')),
   });
 
   rl.on('line', (line) => {
     const l = JSON.parse(line);
     l._id = l._id.$oid;
-    delete l.__v
+    delete l.__v;
     const c = new Character(l);
     c.save(function (err) {
       if(err) console.log(err);
@@ -34,8 +34,8 @@ module.exports = function (app) {
     async.parallel([
       function (callback) {
         Character.count({}, function (err, count) {
-          if(count<1) {
-            importData()
+          if(count < 1) {
+            importData();
           }
           callback(err, count);
         });
@@ -75,60 +75,60 @@ module.exports = function (app) {
           const total = totalVotes.length ? totalVotes[0].total : 0;
           callback(err, total);
         }
-          );
+        );
       },
       function (callback) {
         Character
-            .find()
-            .sort('-wins')
-            .limit(100)
-            .select('race')
-            .exec(function (err, characters) {
-              if (err) return next(err);
+          .find()
+          .sort('-wins')
+          .limit(100)
+          .select('race')
+          .exec(function (err, characters) {
+            if (err) return next(err);
 
-              const raceCount = _.countBy(characters, function (character) { return character.race; });
-              const max = _.max(raceCount, function (race) { return race; });
-              const inverted = _.invert(raceCount);
-              const topRace = inverted[max];
-              const topCount = raceCount[topRace];
+            const raceCount = _.countBy(characters, function (character) { return character.race; });
+            const max = _.max(raceCount, function (race) { return race; });
+            const inverted = _.invert(raceCount);
+            const topRace = inverted[max];
+            const topCount = raceCount[topRace];
 
-              callback(err, { race: topRace, count: topCount });
-            });
+            callback(err, { race: topRace, count: topCount });
+          });
       },
       function (callback) {
         Character
-            .find()
-            .sort('-wins')
-            .limit(100)
-            .select('bloodline')
-            .exec(function (err, characters) {
-              if (err) return next(err);
+          .find()
+          .sort('-wins')
+          .limit(100)
+          .select('bloodline')
+          .exec(function (err, characters) {
+            if (err) return next(err);
 
-              const bloodlineCount = _.countBy(characters, function (character) { return character.bloodline; });
-              const max = _.max(bloodlineCount, function (bloodline) { return bloodline; });
-              const inverted = _.invert(bloodlineCount);
-              const topBloodline = inverted[max];
-              const topCount = bloodlineCount[topBloodline];
+            const bloodlineCount = _.countBy(characters, function (character) { return character.bloodline; });
+            const max = _.max(bloodlineCount, function (bloodline) { return bloodline; });
+            const inverted = _.invert(bloodlineCount);
+            const topBloodline = inverted[max];
+            const topCount = bloodlineCount[topBloodline];
 
-              callback(err, { bloodline: topBloodline, count: topCount });
-            });
+            callback(err, { bloodline: topBloodline, count: topCount });
+          });
       },
     ],
-      function (err, results) {
-        if (err) return next(err);
+    function (err, results) {
+      if (err) return next(err);
 
-        res.send({
-          totalCount: results[0],
-          amarrCount: results[1],
-          caldariCount: results[2],
-          gallenteCount: results[3],
-          minmatarCount: results[4],
-          maleCount: results[5],
-          femaleCount: results[6],
-          totalVotes: results[7],
-          leadingRace: results[8],
-          leadingBloodline: results[9],
-        });
+      res.send({
+        totalCount: results[0],
+        amarrCount: results[1],
+        caldariCount: results[2],
+        gallenteCount: results[3],
+        minmatarCount: results[4],
+        maleCount: results[5],
+        femaleCount: results[6],
+        totalVotes: results[7],
+        leadingRace: results[8],
+        leadingBloodline: results[9],
       });
+    });
   });
 };
