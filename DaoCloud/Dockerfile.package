@@ -1,0 +1,8 @@
+FROM node:8-alpine
+MAINTAINER  Yourtion Guo <yourtion@gmail.com>
+
+EXPOSE 3000
+WORKDIR /Voting
+CMD ["node", "server.js"]
+
+COPY Voting /Voting
