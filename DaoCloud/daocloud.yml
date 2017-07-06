@@ -1,0 +1,21 @@
+version: "3.0"
+stages:
+- build
+Build:
+  stage: build
+  job_type: lite_image_build
+  only:
+    branches:
+    - .*
+    tags:
+    - .*
+  compile:
+    dockerfile_path: daocloud.io/Dockerfile.compile
+    build_dir: /
+    cache: true
+  extract:
+  - /Voting
+  package:
+    dockerfile_path: daocloud.io/Dockerfile.package
+    build_dir: /
+    cache: true
