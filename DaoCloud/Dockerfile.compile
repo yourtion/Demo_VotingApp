@@ -1,0 +1,13 @@
+FROM node:8
+MAINTAINER  Yourtion Guo <yourtion@gmail.com>
+
+COPY . /Voting
+
+WORKDIR /Voting
+
+RUN npm config set registry http://nexus.daocloud.io/repository/daocloud-npm && \
+    npm install -s && \
+	  npm run daocloud_init && \
+    rm -rf node_modules && \
+	  npm install -s --production && \
+	  rm -rf LICENSE README.md ScreenShot.jpg bower.json bower_components data_sample/newedenfaces.bson gulpfile.js install_env.sh
